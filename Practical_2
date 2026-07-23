@@ -1,0 +1,99 @@
+using System;
+public class HelloWorld
+{
+public static void Main(string[] args)
+{
+Console.WriteLine("Select Type of Employee");
+Console.WriteLine("1. Full-time Employee");
+Console.WriteLine("2. Part-time Employee");
+Console.Write("Enter your choice: ");
+int ch = Convert.ToInt32(Console.ReadLine());
+employee e = null;
+Ipayrol payrol = null;
+if (ch == 1)
+{
+e = new FullTimeEmp();
+payrol = (Ipayrol)e;
+}
+else if (ch == 2)
+{
+e = new PartTimeEmp();
+payrol = (Ipayrol)e;
+}
+else
+{
+Console.WriteLine("Invalid Choice");
+return;
+}
+e.acceptdet();
+e.dispdet();
+payrol.calcSal();
+}
+// Interface
+interface Ipayrol
+{
+void calcSal();
+}
+// Parent Class
+class employee
+{
+public int empid;
+public string ename;
+public double bsal;
+// Constructor
+public employee()
+{
+Console.WriteLine("\n************************");
+Console.WriteLine("Employee Payroll System");
+Console.WriteLine("************************");
+}
+// Accept Details
+public void acceptdet()
+{
+Console.Write("Enter Employee ID => ");
+empid = Convert.ToInt32(Console.ReadLine());
+Console.Write("Enter Employee Name => ");
+ename = Console.ReadLine();
+Console.Write("Enter Basic Salari => ");
+bsal = Convert.ToDouble(Console.ReadLine());
+}
+// Display Details
+public void dispdet()
+{
+Console.WriteLine("\nEmployee Details");
+Console.WriteLine("");
+Console.WriteLine("Employee ID Console.WriteLine("Employee Name Console.WriteLine("Basic Salary => " + empid);
+=> " + ename);
+=> " + bsal);
+}
+}
+// Full-Time Employee
+class FullTimeEmp : employee, Ipayrol
+{
+public void calcSal()
+{
+double da = bsal * 0.20;
+double hra = bsal * 0.50;
+double ma = bsal * 0.35;
+double pf = bsal * 0.06;
+double netsal = (bsal + da + hra + ma) - pf;
+Console.WriteLine("\nEmployee Type : Full-Time");
+
+Console.WriteLine("DA => " + da);
+Console.WriteLine("HRA => " + hra);
+Console.WriteLine("Medical Allow.=> " + ma);
+Console.WriteLine("PF => " + pf);
+Console.WriteLine("Net Salary =>" + netsal);
+}
+}
+// Part-Time Employee
+class PartTimeEmp : employee, Ipayrol
+{
+public void calcSal()
+{
+double netsal = bsal;
+Console.WriteLine("\nEmployee Type : Part-Time");
+Console.WriteLine("Net Salary : " + netsal);
+}
+}
+}
