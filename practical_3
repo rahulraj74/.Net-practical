@@ -1,0 +1,72 @@
+
+using System;
+
+namespace ExpenseTracking
+{
+    class Expense
+    {
+        public int ExpenseId;
+        public string ExpenseName;
+        public decimal Amount;
+
+        // Constructor
+        public Expense(int id, string name, decimal amount)
+        {
+            ExpenseId = id;
+            ExpenseName = name;
+            Amount = amount;
+        }
+
+        // Display Method
+        public void DisplayExpense()
+        {
+            Console.WriteLine("\n----- Expense Details -----");
+            Console.WriteLine("Expense ID   : " + ExpenseId);
+            Console.WriteLine("Expense Name : " + ExpenseName);
+            Console.WriteLine("Amount       : ₹" + Amount);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                Console.Write("Enter Expense ID: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+
+                Console.Write("Enter Expense Name: ");
+                string name = Console.ReadLine() ?? "";
+
+                Console.Write("Enter Expense Amount: ");
+                decimal amount = Convert.ToDecimal(Console.ReadLine());
+
+                // Check amount
+                if (amount < 0)
+                {
+                    throw new Exception("Amount cannot be negative.");
+                }
+
+                // Create Expense object
+                Expense exp = new Expense(id, name, amount);
+
+                Console.WriteLine("\nExpense Added Successfully!");
+
+                // Display expense
+                exp.DisplayExpense();
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("\nError: Please enter valid data.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nError: " + ex.Message);
+            }
+
+            Console.WriteLine("\nPress Enter to Exit...");
+            Console.ReadLine();
+        }
+    }
+}
