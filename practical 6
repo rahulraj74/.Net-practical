@@ -18,10 +18,8 @@ public decimal Price { get;
 set; }
 }
 }
-
 Controllers:
 HomeController.cs:
-
 using Practical_6.Models;
 using System;
 using System.Collections.Generic;
@@ -264,13 +262,11 @@ padding: 22px;
 </style>
 </head>
 <body>
-
 <!-- Background Orbs -->
-\<div class="orb orb1"></div>
+<div class="orb orb1"></div>
 <div class="orb orb2"></div>
 
 <!-- Header -->
-
 <div class="header">
 <h1>🛍 Product Catalog</h1>
 </div>
@@ -296,6 +292,7 @@ padding: 22px;
 <div class="price">
 ₹@product.Price
 </div>
+
 <!-- Button -->
 <a href="#" class="button">
 View Product →
@@ -310,6 +307,7 @@ View Product →
 </div>
 </body>
 </html>
+
 
 App_Start/RouteConfig.cs:
 ﻿ using System;
@@ -338,4 +336,3 @@ UrlParameter.Optional }
 }
 }
 }
-
