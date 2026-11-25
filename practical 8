@@ -1,0 +1,250 @@
+using System;
+using System. Collections.
+Generic; using System. Linq;
+using System. Web;
+namespace
+InventoryManagementModel. Models
+{ public class
+Product
+{ public int ProductId { get; set; }
+public string ProductName { get;
+set; } public int Quantity { get;
+set; } public decimal Price { get;
+set; }
+}
+}
+ProductController.cs:-
+using InventoryManagementModel. Models;
+using System. Data.
+SqlClient; using System;
+using System. Collections. Generic;
+using System.
+Linq; using
+System. Web; using
+System. Web. Mvc;
+using System. Security. Cryptography. X509Certificates;
+namespace InventoryManagementModel.
+Controllers
+{ public class ProductController :
+Controller
+{ string cs =@"Data Source=(localdb)\MSSQLLocalDB;
+Initial
+Catalog=InventoryDB; Integrated Security=True"; public ActionResult Index()
+{
+List<Product> products = new
+List<Product>(); using (SqlConnection conn
+= new SqlConnection(cs))
+{ string query = "SELECT * FROM Products";
+SqlCommand cmd = new SqlCommand(query,
+conn); conn. Open();
+SqlDataReader dr = cmd.
+ExecuteReader(); while (dr. Read())
+{ products. Add(new
+Product
+{
+ProductId = Convert. ToInt32(dr["ProductId"] ),
+ProductName = dr["ProductName"] . ToString(),
+Quantity = Convert. ToInt32(dr["Quantity"] ),
+Price = Convert. ToDecimal(dr["Price"] )
+});
+}
+}
+return View(products);
+}
+public ActionResult Create()
+{ return View();
+}
+//Crete : save product
+[HttpPost]
+public ActionResult Create(Product p)
+{ using (SqlConnection conn = new
+SqlConnection(cs))
+{ string query = @"INSERT INTO
+Products
+(ProductId, ProductName, Quantity, Price)
+VALUES (@ProductId, @ProductName, @Quantity, @Price)";
+SqlCommand cmd = new SqlCommand(query,
+conn);
+// FIX THE TYPOS HERE (Change @ProuctId to @ProductId,
+etc. ): cmd. Parameters. AddWithValue("@ProductId",
+p. ProductId); cmd. Parameters.
+AddWithValue("@ProductName", p. ProductName); cmd.
+Parameters. AddWithValue("@Quantity", p. Quantity);
+cmd. Parameters. AddWithValue("@Price", p. Price);
+conn. Open(); cmd.
+ExecuteNonQuery();
+}
+return RedirectToAction("Index");
+}
+// 1. GET: Product/Edit/5
+[HttpGet]
+public ActionResult Edit(int id)
+{
+Product p = new Product();
+using (SqlConnection conn = new
+SqlConnection(cs))
+{ string query = "SELECT * FROM Products WHERE
+ProductId=@ProductId";
+SqlCommand cmd = new SqlCommand(query,
+conn); cmd. Parameters.
+AddWithValue("@ProductId", id); conn.
+Open();
+SqlDataReader dr = cmd.
+ExecuteReader();
+if (dr. Read())
+{
+p. ProductId = Convert. ToInt32(dr["ProductId"] );
+p. ProductName = dr["ProductName"] . ToString();
+p. Quantity = Convert. ToInt32(dr["Quantity"] );
+p. Price = Convert.
+ToDecimal(dr["Price"] ); }
+else { return HttpNotFound(); }
+}
+return View(p);
+}
+// 2. POST: Product/Edit
+[HttpPost]
+public ActionResult Edit(Product p)
+{
+using (SqlConnection conn = new
+SqlConnection(cs))
+{ string query = @"UPDATE Products
+SET ProductName=@ProductName,
+Quantity=@Quantity,
+Price=@Price
+WHERE ProductId=@ProductId";
+SqlCommand cmd = new SqlCommand(query, conn); cmd.
+Parameters. AddWithValue("@ProductId", p.
+ProductId); cmd. Parameters.
+AddWithValue("@ProductName", p. ProductName); cmd.
+Parameters. AddWithValue("@Quantity", p. Quantity);
+cmd. Parameters. AddWithValue("@Price", p. Price);
+conn. Open(); cmd. ExecuteNonQuery();
+}
+return RedirectToAction("Index");
+}
+[HttpPost]
+public ActionResult Delete(int id)
+{ using (SqlConnection conn = new
+SqlConnection(cs))
+{
+// FIX TYPO: Change @ProuductId to
+@ProductId
+string query = "DELETE FROM Products WHERE
+ProductId=@ProductId";
+SqlCommand cmd = new SqlCommand(query,
+conn);
+// FIX TYPO: Change @ProuctId to
+@ProductId cmd. Parameters.
+AddWithValue("@ProductId", id);
+conn. Open(); cmd.
+ExecuteNonQuery();
+}
+return RedirectToAction("Index");
+}
+}
+}
+Create.cshtml:-
+@modeL InventoryManagementModel. Models. Product
+@{
+Layout = null;
+}
+<h2>ADD NEW PRODUCT</h2>
+@using (Html. BeginForm())
+{
+<p>Product Name: </p>
+@Html. TextBoxFor(m => m. ProductName)
+<br />
+<br />
+<p>Quantity: </p>
+@Html. TextBoxFor(m => m. Quantity)
+<br />
+<br />
+<p>Price: </p>
+@Html. TextBoxFor(m => m. Price)
+}
+<br />
+<br />
+<input type="submit" value="SAVE PRODUCT" />
+<br />
+@Html. ActionLink("Back to Inventory", "Index")
+Index.cshtml:-
+@model List<InventoryManagementModel. Models. Product>
+@{ Layout = null; }
+<h2> INVENTORY MANAGEMENT </h2>
+<p> @Html. ActionLink("Add new product", "Create")</p>
+<table border="1">
+<tr>
+<th>Product ID</th>
+<th>Product Name</th>
+<th>Quantity</th>
+<th>Price</th>
+<th>Actions</th>
+</tr>
+@foreach (var item in Model)
+{
+<tr>
+<td>@item. ProductId</td>
+<td>@item. ProductName</td>
+<td>@item. Quantity</td>
+<td>@item. Price</td>
+<td>
+@Html. ActionLink("Edit", "Edit", new { id = item. ProductId })
+@using (Html. BeginForm("delete", "Product", new { id = item.
+ProductId }, FormMethod. Post))
+{<input type="submit" value="Delete" />}
+</td>
+</tr>
+}
+</table>
+
+Edit.cshtml:-
+InventoryManagementModel. Models. Product
+Layout = null;
+<h2>EDIT PRODUCT</h2>
+@using (Html. BeginForm())
+@Html. HiddenFor(m => m. ProductId)
+<p>Product Name: </p>
+@Html. TextBoxFor(m => m. ProductName)
+<br />
+<br />
+<p>Quantity: </p>
+@Html. TextBoxFor(m => m. Quantity)
+<br />
+<br />
+<p>Price: </p>
+@Html. TextBoxFor(m => m. Price)
+<br />
+<br />
+<input type="submit" value="UPDATE PRODUCT" />
+}
+<br />
+@Html. ActionLink("Back to Inventory", "Index")
+RoutConfig. cs
+using
+System;
+using System. Collections.
+Generic;
+using System. Linq;
+using System. Web;
+using System. Web.
+Mvc; using System.
+Web. Routing;
+namespace
+InventoryManagementModel
+{ public class
+RouteConfig
+{ public static void RegisterRoutes(RouteCollection
+routes)
+{ routes. IgnoreRoute("{resource}.
+axd/{*pathInfo}");
+routes. MapRoute(
+name: " Default",
+url: "{controller}/{action}/{id}",
+defaults: new { controller = " Product", action = " Index", id
+=
+UrlParameter. Optional }
+);
+}
+}
+}
