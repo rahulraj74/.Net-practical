@@ -1,0 +1,186 @@
+Feedback.cs:
+using System.ComponentModel.DataAnnotations;
+namespace practical
+7.Models
+_
+{
+public class Feedback
+{
+[Required(ErrorMessage =
+public string Name { get; set; }
+"Name is required")]
+[Required(ErrorMessage =
+[EmailAddress(ErrorMessage =
+public string Email { get; set; }
+"Email is required")]
+"Enter a valid email")]
+[Required(ErrorMessage =
+[Range(1, 5, ErrorMessage =
+public int Rating { get; set; }
+"Rating is required")]
+"Rating must be between 1 and 5")]
+[Required(ErrorMessage =
+"Message is required")]
+[StringLength(200, ErrorMessage =
+public string Message { get; set; }
+"Message cannot exceed 200 characters")]
+}
+}
+Controllers:
+FeedbackController.cs:
+using System.Web.Mvc;
+using practical
+_
+7.Models;
+namespace practical
+_
+7.Controllers
+{
+public class FeedbackController : Controller
+{
+// Display Feedback Form
+public ActionResult Index()
+{
+return View();
+}
+// Submit Feedback
+[HttpPost]
+public ActionResult Index(Feedback feedback)
+{
+if (ModelState.IsValid)
+{
+ViewBag.Message =
+"Feedback submitted
+successfully!"
+; return View(feedback);
+}
+return View(feedback);
+}
+}
+}
+Views:
+Feedback:
+FeedbackForm.cshtml:
+_
+@model practical
+7.Models.Feedback
+_
+<div>
+<div>
+<br />
+<br />
+</div>
+@Html.LabelFor(m => m.Name)
+@Html.TextBoxFor(m => m.Name)
+@Html.ValidationMessageFor(m => m.Name)
+<br />
+<div>
+<br />
+<br />
+</div>
+@Html.LabelFor(m => m.Email)
+@Html.TextBoxFor(m => m.Email)
+@Html.ValidationMessageFor(m => m.Email)
+<br />
+<div>
+@Html.LabelFor(m => m.Rating)
+<br />
+<br />
+</div>
+@Html.TextBoxFor(m => m.Rating)
+@Html.ValidationMessageFor(m => m.Rating)
+<br />
+<div>
+<br />
+<br />
+</div>
+@Html.LabelFor(m => m.Message)
+@Html.TextAreaFor(m => m.Message)
+@Html.ValidationMessageFor(m => m.Message)
+<br />
+<input type=
+"submit"
+value=
+"Submit Feedback" />
+</div>
+Index.cshtml:
+@model practical
+7.Models.Feedback
+_
+@{
+Layout =
+"
+~/Views/Shared/_
+Layout.cshtml"
+;
+ViewBag.Title =
+"Feedback"
+;
+}
+{
+<h2>Feedback Management</h2>
+@using (Html.BeginForm())
+@Html.Partial("
+FeedbackForm"
+_
+, Model)
+}
+@if (ViewBag.Message != null)
+{
+<h3>@ViewBag.Message</h3>
+}
+_
+Layout.cshtml:
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=
+"
+utf-8" />
+<title>Feedback Management</title>
+<style>
+body {
+font-family: Arial;
+margin: 0;
+}
+header {
+background-color: #333;
+color: white;
+padding: 15px;
+}
+nav a {
+color: white;
+margin-right: 20px;
+text-decoration: none;
+}
+main {
+}
+padding: 30px;
+footer {
+background-color: #eee;
+padding: 15px;
+text-align: center;
+}
+</style>
+</head>
+<body>
+<header>
+<h2>Feedback Management System</h2>
+<nav>
+<a href= "@Url.Action("Index" , "Home")> Home</a>
+
+"
+,
+<a href= "@Url.Action("Index , "Feedback"</a>
+"
+
+</nav>
+</header>
+<main>
+@RenderBody()
+</main>
+<footer>
+</footer>
+<p>© 2026 Feedback Management System</p>
+</body>
+</html>
